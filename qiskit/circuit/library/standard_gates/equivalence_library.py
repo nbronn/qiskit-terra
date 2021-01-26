@@ -713,3 +713,91 @@ h_to_rr.append(RGate(theta=pi/2, phi=pi/2), [q[0]])
 h_to_rr.append(RGate(theta=pi, phi=0), [q[0]])
 h_to_rr.global_phase = pi/2
 _sel.add_equivalence(HGate(), h_to_rr)
+
+# XX(theta), FECR equivalence
+
+q = QuantumRegister(2, 'q')
+theta = Parameter('theta')
+xx_to_fecr = QuantumCircuit(q)
+xx_to_fecr.append(U2Gate(0, pi), [q[0]])
+xx_to_fecr.append(FECR(theta), [q[0], q[1]])
+xx_to_fecr.append(U2Gate(pi, pi), [q[0]])
+_sel.add_equivalence(RXXGate(theta), xx_to_fecr)
+
+# XX(theta), RECR equivalence
+
+q = QuantumRegister(2, 'q')
+theta = Parameter('theta')
+xx_to_recr = QuantumCircuit(q)
+xx_to_recr.append(U2Gate(0, pi), [q[1]])
+xx_to_recr.append(RECR(theta), [q[0], q[1]])
+xx_to_recr.append(U2Gate(pi, pi), [q[1]])
+_sel.add_equivalence(RXXGate(theta), xx_to_recr)
+
+# YX(theta), FECR equivalence
+
+q = QuantumRegister(2, 'q')
+theta = Parameter('theta')
+yx_to_fecr = QuantumCircuit(q)
+yx_to_fecr.append(RYGate(pi/2), [q[0]])
+yx_to_fecr.append(RYGate(-pi/2), [q[1]])
+yx_to_fecr.append(SGate(), [q[1]])
+yx_to_fecr.append(FECR(theta), [q[0], q[1]])
+yx_to_fecr.append(RYGate(-pi/2), [q[0]])
+yx_to_fecr.append(ZGate(), [q[0]])
+yx_to_fecr.append(SdgGate(), [q[1]])
+yx_to_fecr.append(RYGate(pi/2), [q[1]])
+_sel.add_equivalence(RYXGate(theta), yx_to_fecr)
+
+# YX(theta), RECR equivalence
+
+q = QuantumRegister(2, 'q')
+theta = Parameter('theta')
+yx_to_recr = QuantumCircuit(q)
+yx_to_recr.append(RXGate(pi/2), [q[1]])
+yx_to_recr.append(RECR(theta), [q[0], q[1]])
+yx_to_recr.append(RXGate(pi/2), [q[1]])
+_sel.add_equivalence(RYXGate(theta), yx_to_recr)
+
+# ZX(theta), FECR equivalences
+
+q = QuantumRegister(2, 'q')
+theta = Parameter('theta')
+zx_to_fecr = QuantumCircuit(q)
+zx_to_fecr.append(FECR(theta), [q[0], q[1]])
+zx_to_fecr.append(XGate(), [q[0]])
+_sel.add_equivalence(RZXGate(theta), zx_to_fecr)
+
+# ZX(theta), RECR equivalence
+
+q = QuantumRegister(2, 'q')
+theta = Parameter('theta')
+zx_to_recr = QuantumCircuit(q)
+zx_to_recr.append(HGate(), [q[0]])
+zx_to_recr.append(HGate(), [q[1]])
+zx_to_recr.append(RECR(theta), [q[0], q[1]])
+zx_to_recr.append(HGate(), [q[0]])
+zx_to_recr.append(HGate(), [q[1]])
+_sel.add_equivalence(RZXGate(theta), zx_to_recr)
+
+# ZZ(theta), FECR equivalence
+
+q = QuantumRegister(2, 'q')
+theta = Parameter('theta')
+zz_to_fecr = QuantumCircuit(q)
+zz_to_fecr.append(HGate(), [q[1]])
+zz_to_fecr.append(FECR(theta), [q[0], q[1]])
+zz_to_fecr.append(XGate(), [q[0]])
+zz_to_fecr.append(HGate(), [q[1]])
+_sel.add_equivalence(RZZGate(theta), zz_to_fecr)
+
+# ZZ(theta), RECR equivalence
+
+q = QuantumRegister(2, 'q')
+theta = Parameter('theta')
+zz_to_recr = QuantumCircuit(q)
+zz_to_recr.append(HGate(), [q[0]])
+zz_to_recr.append(RECR(theta), [q[0], q[1]])
+zz_to_recr.append(HGate(), [q[0]])
+zz_to_recr.append(XGate(), [q[1]])
+_sel.add_equivalence(RZZGate(theta), zz_to_recr)
